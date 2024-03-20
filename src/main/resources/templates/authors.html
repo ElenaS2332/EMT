@@ -1,0 +1,37 @@
+<div xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" sec:authorize="isAuthenticated()">
+  <section class="jumbotron text-center">
+    <h3 class="jumbotron-heading">All Authors</h3>
+  </section>
+  <div class="container mb-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Surname</th>
+              <th scope="col">Country</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="author : ${authors}">
+              <td th:text="${author.getName()}"></td>
+              <td th:text="${author.getSurname()}"></td>
+              <td th:text="${author.getCountry().getName()}"></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="text-center"  sec:authorize="hasRole('ROLE_ADMIN')">
+          <form th:action="@{'/authors/add-author'}" th:method="GET" >
+            <button type="submit" class="btn btn-sm btn-primary">
+              <i class="fa fa-plus"></i> Add Author
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

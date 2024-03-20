@@ -1,0 +1,44 @@
+<th:block xmlns:th="http://www.thymeleaf.org" xmlns:sec="" sec:authorize="isAuthenticated()">
+    <section class="jumbotron text-center">
+        <div class="container">
+            <h1 class="jumbotron-heading">Library</h1>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5">
+                <form action="/books/save-book" method="POST">
+                    <input type="hidden" id="id" name="id">
+                    <div class="form-group">
+                        <label for="name">Book Title</label>
+                        <input type="text" class="form-control" id="name" name="name" required placeholder="Enter book title">
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <select class="form-control" id="category" name="category">
+                            <option th:each="category : ${T(com.example.library.models.enumerations.CategoryEnum).values()}"
+                                    th:value="${category.name()}" th:text="${category}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="availableCopies">Available Copies</label>
+                        <input type="number" class="form-control" id="availableCopies" name="availableCopies" placeholder="Available Copies">
+                    </div>
+                    <div class="form-group">
+                        <label for="author">Author</label>
+                        <select class="form-control" id="author" name="author">
+                            <option th:each="author : ${authors}" th:value="${author.getId()}" th:text="${author.getName()}"></option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <a href="/books" class="btn btn-secondary">Back</a>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+</th:block>

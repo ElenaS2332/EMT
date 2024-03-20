@@ -1,0 +1,47 @@
+<th:block xmlns:th="http://www.thymeleaf.org" xmlns:sec="" sec:authorize="isAuthenticated()">
+  <section class="jumbotron text-center">
+    <div class="container">
+      <h1 class="jumbotron-heading">Library</h1>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-5">
+        <form action="/authors/save-author" method="POST">
+          <input id="id" type="hidden" name="id">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text"
+                   class="form-control"
+                   id="name"
+                   name="name"
+                   required
+                   placeholder="Enter author name">
+          </div>
+
+          <div class="form-group">
+            <label for="surname">Surname</label>
+            <input type="text"
+                   class="form-control"
+                   id="surname"
+                   name="surname"
+                   required
+                   placeholder="Enter author surname">
+          </div>
+          <div class="form-group">
+            <label for="country">Country</label>
+            <select class="form-control" id="country" name="country">
+              <option value="">Select Country</option>
+              <th:block th:each="country : ${countries}">
+                <option th:value="${country.id}" th:text="${country.name}"></option>
+              </th:block>
+            </select>
+          </div>
+          <button id="submit" type="submit" class="btn btn-primary">Submit</button>
+          <a type="button" class="btn btn-primary" href="/authors">Back</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</th:block>
