@@ -8,7 +8,7 @@ import lombok.Data;
 public class BookDto {
     private String name;
 
-    private CategoryEnum category;
+    private String category;
 
     private Long authorId;
 

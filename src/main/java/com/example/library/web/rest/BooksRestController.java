@@ -3,6 +3,7 @@ package com.example.library.web.rest;
 import com.example.library.models.Author;
 import com.example.library.models.Book;
 import com.example.library.models.dto.BookDto;
+import com.example.library.models.events.BookCreatedEvent;
 import com.example.library.services.AuthorService;
 import com.example.library.services.BookService;
 import org.springframework.http.ResponseEntity;

@@ -1,8 +1,9 @@
 package com.example.library.services.impl;
 
+import com.example.library.models.events.BookCreatedEvent;
 import com.example.library.services.BookService;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import com.example.library.models.Author;
@@ -20,10 +21,14 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
 
-    public BookServiceImpl(BookRepository bookRepository, AuthorRepository authorRepository) {
+    public BookServiceImpl(BookRepository bookRepository, AuthorRepository authorRepository, ApplicationEventPublisher applicationEventPublisher) {
         this.bookRepository = bookRepository;
         this.authorRepository = authorRepository;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
+
+    private final ApplicationEventPublisher applicationEventPublisher;
+
 
     @Override
     public List<Book> findAll() {
@@ -41,7 +46,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Transactional
     public Optional<Book> save(String name, String category, Long authorId, Integer availableCopies) {
         Author author = this.authorRepository.findById(authorId)
                 .orElseThrow(() -> new AuthorNotFoundException(authorId));
@@ -56,10 +60,11 @@ public class BookServiceImpl implements BookService {
     public Optional<Book> save(BookDto bookDto) {
         Author author = this.authorRepository.findById(bookDto.getAuthorId())
                 .orElseThrow(() -> new AuthorNotFoundException(bookDto.getAuthorId()));
-        CategoryEnum categoryEnum = bookDto.getCategory();
+        CategoryEnum categoryEnum = CategoryEnum.valueOf(bookDto.getCategory());
         this.bookRepository.deleteByName(bookDto.getName());
         Book book = new Book(bookDto.getName(), categoryEnum, author, bookDto.getAvailableCopies());
         bookRepository.save(book);
+        applicationEventPublisher.publishEvent(new BookCreatedEvent(book));
         return Optional.of(book);
     }
 
@@ -86,7 +91,7 @@ public class BookServiceImpl implements BookService {
                 .orElseThrow(() -> new BookNotFoundException(id));
 
         book.setName(bookDto.getName());
-        CategoryEnum categoryEnum = bookDto.getCategory();
+        CategoryEnum categoryEnum = CategoryEnum.valueOf(bookDto.getCategory());
         book.setCategory(categoryEnum);
         book.setAvailableCopies(bookDto.getAvailableCopies());
 
